@@ -11,7 +11,10 @@ import java.util.Scanner;
  */
 public class lab1 {
 	public static void main(String[] args) {
-
+		/*String testbugs = null;
+		if (testbugs.equals("0")) {
+				System.out.println("haha");
+			}*/
 		String copy = "";
 		Vector<HashMap<Character, Integer>> exp;
 		exp = new Vector<HashMap<Character, Integer>>();
