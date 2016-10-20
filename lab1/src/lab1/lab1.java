@@ -179,7 +179,7 @@ public class lab1{
 		}
 	}
 	public static void derivative(String infor,Vector<HashMap<Character,Integer>> exp,String stcopy){
-		char c=infor.charAt(4);
+		char c=infor.charAt(5);
 		Boolean GET=false;
 		for(int i=0;i<exp.size();i++){
 			if(exp.get(i).size()==1){
