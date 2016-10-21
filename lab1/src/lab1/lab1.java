@@ -10,29 +10,39 @@ import java.util.Scanner;
  * @author tmy
  */
 public class lab1 {
+	public static void copyExp(Vector<HashMap<Character, Integer>> a, Vector<HashMap<Character, Integer>> b) {
+		b.removeAll(b);
+		for (int i = 0; i < a.size(); i++){
+			HashMap<Character, Integer> t = new HashMap<Character, Integer>();
+			t = (HashMap) ((HashMap) a.get(i)).clone();
+			b.addElement(t);
+		}
+		return;
+	}
 	public static void main(String[] args) {
-		/*String testbugs = null;
-		if (testbugs.equals("0")) {
-				System.out.println("haha");
-			}*/
 		String copy = "";
-		Vector<HashMap<Character, Integer>> exp;
+		Vector<HashMap<Character, Integer>> exp, expre;
 		exp = new Vector<HashMap<Character, Integer>>();
 		@SuppressWarnings("resource")
 		Scanner command = new Scanner(System.in);
+		
+		expre = new Vector<HashMap<Character, Integer>>();
 		while (true) {
 			String infor = command.nextLine();
 			if (infor.charAt(0) != '!') {
 				copy = infor;
-				if (expression(infor, exp) == 0) {
+				if (expression(infor, exp) == 0) {					
 					printAll(exp);
 				} else {
 					continue;
 				}
-			} else if (infor.length() >= 9 && infor.substring(0, 9).equals("!simplify")) {
-				simplify(infor, exp, copy);
+				copyExp(exp, expre);
+			} else if (infor.length() >= 9 && infor.substring(0, 9).equals("!simplify")) {				
+				simplify(infor, exp);
+				copyExp(expre, exp);
 			} else if (infor.length() > 4 && infor.substring(0,4).equals("!d/d")){
-				derivative(infor, exp, copy);
+				derivative(infor, exp);
+				copyExp(expre, exp);
 			} else {
 				System.out.println("Error, no variable");
 			}
@@ -134,10 +144,6 @@ public class lab1 {
 					NumChange=true;
 				}
 				if(NumChange==true){
-					//if(temp==0)
-					//{
-						//NumTemp=0;
-					//}
 					Term.put(' ', NumTemp);
 				}
 				else
@@ -164,13 +170,10 @@ public class lab1 {
 		V.addElement(Term);
 		return 0;
 	}
-	public static void simplify(String infor,Vector<HashMap<Character,Integer>> exp,String stcopy){
-		Vector<HashMap<Character,Integer>> expClone=new Vector<HashMap<Character,Integer>>();
-		expClone=(Vector)exp.clone();
+	public static void simplify(String infor,Vector<HashMap<Character,Integer>> exp){
 		if(infor.length()==9){
 			printAll(exp);
-		}
-		else{
+		} else {
 			char x=infor.charAt(10);
 			int value=0;
 			int mi=0;
@@ -185,24 +188,23 @@ public class lab1 {
 				}
 				if(infor.charAt(i)==' ' || i==infor.length()-1){
 					for(int j=0;j<exp.size();j++){
-						if(expClone.get(j).get(x)!=null){
+						if(exp.get(j).get(x)!=null){
 							//GET=true;
 							mi=exp.get(j).get(x);
 							for(int n=0;n<mi;n++){
-								expClone.get(j).put(' ',expClone.get(j).get(' ')*value);
+								exp.get(j).put(' ',exp.get(j).get(' ')*value);
 							}
-							expClone.get(j).remove(x);
+							exp.get(j).remove(x);
 						}
 					}
 					value=0;mi=0;item=0;
 				}
 			}
-			check(expClone);
-			expression(stcopy,exp);
-			printAll(expClone);
+			check(exp);
+			printAll(exp);
 		}
 	}
-	public static void derivative(String infor,Vector<HashMap<Character,Integer>> exp,String stcopy){
+	public static void derivative(String infor,Vector<HashMap<Character,Integer>> exp){
 		char c = infor.charAt(5);
 		Boolean GET=false;
 		for(int i=0;i<exp.size();i++){
@@ -231,6 +233,5 @@ public class lab1 {
 		}
 		check(exp);
 		printAll(exp);
-		expression(stcopy,exp);
 	}
 }
