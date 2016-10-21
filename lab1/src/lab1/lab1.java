@@ -1,9 +1,7 @@
 package lab1;
+
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.io.*;
-import java.util.Scanner;
 
 /**
  * the code of lab1.
@@ -20,24 +18,21 @@ public class lab1 {
 		return;
 	}
 	public static void main(String[] args) {
-		String copy = "";
-		Vector<HashMap<Character, Integer>> exp, expre;
+		Vector<HashMap<Character, Integer>> exp ,expre;
 		exp = new Vector<HashMap<Character, Integer>>();
+		expre = new Vector<HashMap<Character, Integer>>();
 		@SuppressWarnings("resource")
 		Scanner command = new Scanner(System.in);
-		
-		expre = new Vector<HashMap<Character, Integer>>();
 		while (true) {
 			String infor = command.nextLine();
 			if (infor.charAt(0) != '!') {
-				copy = infor;
-				if (expression(infor, exp) == 0) {					
+				if (expression(infor, exp) == 0) {
 					printAll(exp);
 				} else {
 					continue;
 				}
 				copyExp(exp, expre);
-			} else if (infor.length() >= 9 && infor.substring(0, 9).equals("!simplify")) {				
+			} else if (infor.length() >= 9 && infor.substring(0, 9).equals("!simplify")) {
 				simplify(infor, exp);
 				copyExp(expre, exp);
 			} else if (infor.length() > 4 && infor.substring(0,4).equals("!d/d")){
@@ -96,8 +91,9 @@ public class lab1 {
 				i = i - 1;
 			}
 		}
-		HashMap<Character, Integer> SUM = new HashMap<Character, Integer>();
+		
 		if (sum != 0) {
+			HashMap<Character, Integer> SUM = new HashMap<Character, Integer>();
 			SUM.put(' ', sum);
 			v.add(SUM);
 		}
@@ -108,12 +104,14 @@ public class lab1 {
 	 * @return 1 or 0
 	 */
 	public static int Right(char x){
+		int flag=0;
 		if (x >= '0' && x <= '9' || x >= 'a' && x <= 'z' 
 				|| x == '+' || x == '*' || x == ' ' || x == '\t') {
-			return 1;
+			flag = 1;
 		} else {
-			return 0;
+			flag = 0;
 		}
+		return flag;
 	}
  	public static int expression(String infor,Vector<HashMap<Character,Integer>> V){
 		int NumTemp=1;
@@ -121,12 +119,15 @@ public class lab1 {
 		boolean NumChange=false;
 		HashMap<Character,Integer> Term=new HashMap<Character,Integer>();
 		V.removeAll(V);
+		int ret = 0;
 		for(int i=0;i<infor.length();i++){
 			if(Right(infor.charAt(i))==0){
 				System.out.println("Error, no variable");
-				return -1;
+				ret = -1;
 			}
-			if(infor.charAt(i)==' ' || infor.charAt(i)=='\t') continue;
+			if(infor.charAt(i)==' ' || infor.charAt(i)=='\t'){
+				continue;
+			}
 			if(infor.charAt(i)>=48 && infor.charAt(i)<=57){
 				temp=temp*10+infor.charAt(i)-'0';
 				NumChange=true;
@@ -141,13 +142,16 @@ public class lab1 {
 			else if(infor.charAt(i)=='+'){
 				if(temp!=0){
 					NumTemp=NumTemp*temp;
-					NumChange=true;
 				}
-				if(NumChange==true){
+				if(NumChange){
+					//if(temp==0)
+					//{
+						//NumTemp=0;
+					//}
 					Term.put(' ', NumTemp);
-				}
-				else
+				}else{
 					Term.put(' ',1);
+				}
 				V.addElement(Term);
 				Term=new HashMap<Character,Integer>();
 				NumTemp=1;
@@ -155,11 +159,11 @@ public class lab1 {
 				NumChange=false;
 			}
 			else{
-				if(Term.get(infor.charAt(i))!=null){
-					Term.put(infor.charAt(i), Integer.valueOf(Term.get(infor.charAt(i))+1));
+				if(Term.get(infor.charAt(i)) == null){
+					Term.put(infor.charAt(i), 1);
 				}
 				else{
-					Term.put(infor.charAt(i), 1);
+					Term.put(infor.charAt(i), Integer.valueOf(Term.get(infor.charAt(i))+1));
 				}
 			}
 		}
@@ -168,7 +172,7 @@ public class lab1 {
 		}
 		Term.put(' ', NumTemp);
 		V.addElement(Term);
-		return 0;
+		return ret;
 	}
 	public static void simplify(String infor,Vector<HashMap<Character,Integer>> exp){
 		if(infor.length()==9){
@@ -176,9 +180,9 @@ public class lab1 {
 		} else {
 			char x=infor.charAt(10);
 			int value=0;
-			int mi=0;
-			int item=0;
+			
 			for(int i=10;i<infor.length();i++){
+				int mi=0;
 				if(i<infor.length()-1 && (infor.charAt(i)<48 || infor.charAt(i)>57)&& infor.charAt(i+1)=='='){
 					x=infor.charAt(i);
 					continue;
@@ -197,7 +201,7 @@ public class lab1 {
 							exp.get(j).remove(x);
 						}
 					}
-					value=0;mi=0;item=0;
+					value=0;mi=0;
 				}
 			}
 			check(exp);
@@ -227,7 +231,7 @@ public class lab1 {
 				}
 			}
 		}
-		if(GET==false){
+		if(!GET){
 			System.out.println("Error, no variable");
 			return;
 		}
